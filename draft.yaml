@@ -1,0 +1,95 @@
+models:
+  Uloga:
+    naziv: string
+    relationships:
+      hasMany: Korisnik
+
+  Klijent:
+    ime: string
+    prezime: string
+    telefon: string
+    email: string:nullable
+    adresa: string:nullable
+    relationships:
+      hasMany: Zahtev
+      hasMany: Poruka
+
+  Zahtev:
+    broj_zahteva: string
+    opis: text
+    tip_vestacenja: string
+    lokacija: string
+    hitnost: string
+    status: string
+    datum_podnosenja: date
+    klijent_id: id
+    relationships:
+      belongsTo: Klijent
+      hasOne: TerenskiPodaci
+
+  TerenskiPodaci:
+    datum_terena: date
+    opis_terena: text
+    merenja: text
+    fotografije: text
+    analize: text
+    zahtev_id: id
+    relationships:
+      belongsTo: Zahtev
+      hasMany: Dokument
+
+  Dokument:
+    naziv: string
+    tip: string
+    putanja: string
+    datum_dodavanja: date
+    terenski_podaci_id: id
+    relationships:
+      belongsTo: TerenskiPodaci
+
+  Izvestaj:
+    naziv: string
+    datum: date
+    status: string
+    korisnik_id: id # može ostati FK ka korisniku iz Breeza
+    zahtev_id: id
+    relationships:
+      belongsTo:
+        Korisnik
+        Zahtev
+
+  Poruka:
+    sadrzaj: text
+    datum_slanja: date
+    posiljalac_id: id
+    primalac_id: id
+    relationships:
+      belongsTo:
+        Klijent
+        Korisnik
+
+controllers:
+  Uloga:
+    resource: web
+  Klijent:
+    resource: web
+  Zahtev:
+    resource: web
+  TerenskiPodaci:
+    resource: web
+  Dokument:
+    resource: web
+  Izvestaj:
+    resource: web
+  Poruka:
+    resource: web
+
+seeders:
+  Uloga
+  Korisnik
+  Klijent
+  Zahtev
+  TerenkskiPodaci
+  Dokument
+  Predmet
+  Izvestaj
