@@ -1,47 +1,89 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.bootstrap')
+
+@section('content')
+<style>
+    .login-card {
+        background: #426cd1;
+        border-radius: 32px;
+        box-shadow: 2px 4px 8px rgba(16,32,64,.2);
+        margin: 50px auto;
+        padding: 48px 32px;
+        max-width: 430px;
+    }
+    .login-title {
+        color: #fff;
+        font-weight: bold;
+        margin-bottom: 32px;
+        font-size: 2rem;
+        text-align: center;
+    }
+    .form-label {
+        color: #fff;
+        font-weight: 400;
+        margin-bottom: 8px;
+    }
+    .form-control {
+        background: #ddd !important;
+        border: none !important;
+        border-radius: 16px !important;
+        margin-bottom: 24px;
+        height: 38px;
+    }
+    .btn-login {
+        background: #959595;
+        color: #222;
+        border-radius: 12px;
+        min-width: 120px;
+        margin-top: 10px;
+        margin-bottom: 12px;
+    }
+    .register-link {
+        color: #222;
+        font-size: 1rem;
+        text-align: center;
+        margin-top: 18px;
+        display: block;
+    }
+    .register-link span {
+        color: #fff;
+    }
+    .register-link a {
+        color: #222;
+        text-decoration: underline;
+        margin-left: .25em;
+        font-size: .98em;
+    }
+</style>
+<div class="login-card">
+    <div class="login-title">Prijava</div>
+
+    @if (session('status'))
+        <div class="alert alert-success mb-3">{{ session('status') }}</div>
+    @endif
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="mb-3">
+            <label for="name" class="form-label">Unesite korisničko ime:</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required autofocus autocomplete="username">
+            @error('name')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="mb-4">
+            <label for="password" class="form-label">Unesite lozinku:</label>
+            <input type="password" id="password" name="password" class="form-control" required autocomplete="current-password">
+            @error('password')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
         </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+        <div class="d-grid gap-2 text-center">
+            <button class="btn btn-login" type="submit">Prijava</button>
         </div>
     </form>
-</x-guest-layout>
+    <div class="register-link">
+        <span>Nemate nalog?</span>
+        <a href="{{ route('register') }}">Registrujte se</a>
+    </div>
+</div>
+@endsection

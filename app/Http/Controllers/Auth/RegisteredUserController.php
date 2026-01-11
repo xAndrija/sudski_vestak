@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Uloga;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $uloge = Uloga::orderBy('id')->get();
+        return view('auth.register', compact('uloge'));
     }
 
     /**
@@ -33,18 +35,20 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'uloga_id' => ['required', 'exists:ulogas,id'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'uloga_id' => $request->uloga_id,
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user); // Automatsko logovanje se isključuje
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('login')->with('status', 'Uspešno ste registrovani, možete da se prijavite.');
     }
 }

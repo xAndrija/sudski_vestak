@@ -1,52 +1,110 @@
-<x-guest-layout>
+@extends('layouts.bootstrap')
+
+@section('content')
+<style>
+    .login-card {
+        background: #426cd1;
+        border-radius: 32px;
+        box-shadow: 2px 4px 8px rgba(16,32,64,.2);
+        margin: 50px auto;
+        padding: 48px 32px;
+        max-width: 430px;
+    }
+    .login-title {
+        color: #fff;
+        font-weight: bold;
+        margin-bottom: 32px;
+        font-size: 2rem;
+        text-align: center;
+    }
+    .form-label {
+        color: #fff;
+        font-weight: 400;
+        margin-bottom: 8px;
+    }
+    .form-control, .form-select {
+        background: #ddd !important;
+        border: none !important;
+        border-radius: 16px !important;
+        margin-bottom: 24px;
+        height: 38px;
+    }
+    .btn-login {
+        background: #959595;
+        color: #222;
+        border-radius: 12px;
+        min-width: 120px;
+        margin-top: 10px;
+        margin-bottom: 12px;
+    }
+    .register-link {
+        color: #222;
+        font-size: 1rem;
+        text-align: center;
+        margin-top: 18px;
+        display: block;
+    }
+    .register-link span {
+        color: #fff;
+    }
+    .register-link a {
+        color: #222;
+        text-decoration: underline;
+        margin-left: .25em;
+        font-size: .98em;
+    }
+</style>
+<div class="login-card">
+    <div class="login-title">Registracija</div>
     <form method="POST" action="{{ route('register') }}">
         @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <div class="mb-3">
+            <label for="email" class="form-label">Unesite email:</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus autocomplete="username">
+            @error('email')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="mb-3">
+            <label for="name" class="form-label">Unesite korisničko ime:</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required autocomplete="name">
+            @error('name')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="mb-3">
+            <label for="password" class="form-label">Unesite lozinku:</label>
+            <input type="password" id="password" name="password" class="form-control" required autocomplete="new-password">
+            @error('password')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
         </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="mb-3">
+            <label for="password_confirmation" class="form-label">Potvrdite lozinku:</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required autocomplete="new-password">
+            @error('password_confirmation')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
         </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <div class="mb-3">
+            <label for="uloga_id" class="form-label">Izaberite ulogu korisnika:</label>
+            <select id="uloga_id" name="uloga_id" class="form-select" required>
+                <option value="" disabled selected hidden>Izaberite...</option>
+                @foreach($uloge as $uloga)
+                    <option value="{{ $uloga->id }}">{{ $uloga->naziv }}</option>
+                @endforeach
+            </select>
+            @error('uloga_id')
+                <span class="text-danger small">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="d-grid gap-2 text-center">
+            <button class="btn btn-login" type="submit">Registracija</button>
         </div>
     </form>
-</x-guest-layout>
+    <div class="register-link">
+        <span>Imate nalog?</span>
+        <a href="{{ route('login') }}">Ulogujte se</a>
+    </div>
+</div>
+@endsection
