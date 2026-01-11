@@ -17,8 +17,10 @@ class Izvestaj extends Model
      */
     protected $fillable = [
         'naziv',
+        'sadrzaj',
         'datum',
         'status',
+        'pdf_putanja',
         'korisnik_id',
         'zahtev_id',
         'korisnik_zahtev_id',

@@ -11,7 +11,9 @@ class IzvestajUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+
+        return ($user?->uloga?->naziv) === 'Administrator';
     }
 
     /**
@@ -21,11 +23,12 @@ class IzvestajUpdateRequest extends FormRequest
     {
         return [
             'naziv' => ['required', 'string'],
+            'sadrzaj' => ['nullable', 'string'],
             'datum' => ['required', 'date'],
             'status' => ['required', 'string'],
-            'korisnik_id' => ['required', 'integer', 'exists:korisniks,id'],
-            'zahtev_id' => ['required', 'integer', 'exists:zahtevs,id'],
-            'korisnik_zahtev_id' => ['required', 'integer', 'exists:korisnik_zahtevs,id'],
+            'pdf_putanja' => ['nullable', 'string'],
+            'zahtev_id' => ['nullable', 'integer', 'exists:zahtevs,id'],
+            'korisnik_zahtev_id' => ['nullable', 'integer'],
         ];
     }
 }

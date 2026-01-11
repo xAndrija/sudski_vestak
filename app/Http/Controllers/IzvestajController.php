@@ -7,6 +7,7 @@ use App\Http\Requests\IzvestajUpdateRequest;
 use App\Models\Izvestaj;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class IzvestajController extends Controller
@@ -15,23 +16,26 @@ class IzvestajController extends Controller
     {
         $izvestajs = Izvestaj::all();
 
-        return view('izvestaj.index', [
-            'izvestajs' => $izvestajs,
-        ]);
+        return view('izvestaji', compact('izvestajs'));
     }
 
     public function create(Request $request): View
     {
+        abort_unless(Gate::allows('izvestaj.create'), 403);
+
         return view('izvestaj.create');
     }
 
     public function store(IzvestajStoreRequest $request): RedirectResponse
     {
-        $izvestaj = Izvestaj::create($request->validated());
+        $data = $request->validated();
+        $data['korisnik_id'] = auth()->id();
+
+        $izvestaj = Izvestaj::create($data);
 
         $request->session()->flash('izvestaj.id', $izvestaj->id);
 
-        return redirect()->route('izvestajs.index');
+        return redirect()->route('izvestaji');
     }
 
     public function show(Request $request, Izvestaj $izvestaj): View
@@ -43,6 +47,8 @@ class IzvestajController extends Controller
 
     public function edit(Request $request, Izvestaj $izvestaj): View
     {
+        abort_unless(Gate::allows('izvestaj.update'), 403);
+
         return view('izvestaj.edit', [
             'izvestaj' => $izvestaj,
         ]);
@@ -50,17 +56,24 @@ class IzvestajController extends Controller
 
     public function update(IzvestajUpdateRequest $request, Izvestaj $izvestaj): RedirectResponse
     {
-        $izvestaj->update($request->validated());
+        abort_unless(Gate::allows('izvestaj.update'), 403);
+
+        $data = $request->validated();
+        $data['korisnik_id'] = auth()->id();
+
+        $izvestaj->update($data);
 
         $request->session()->flash('izvestaj.id', $izvestaj->id);
 
-        return redirect()->route('izvestajs.index');
+        return redirect()->route('izvestaji');
     }
 
     public function destroy(Request $request, Izvestaj $izvestaj): RedirectResponse
     {
+        abort_unless(Gate::allows('izvestaj.delete'), 403);
+
         $izvestaj->delete();
 
-        return redirect()->route('izvestajs.index');
+        return redirect()->route('izvestaji');
     }
 }
