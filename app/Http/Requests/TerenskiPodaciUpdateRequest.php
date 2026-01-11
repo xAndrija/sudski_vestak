@@ -11,7 +11,9 @@ class TerenskiPodaciUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+
+        return ($user?->uloga?->naziv) === 'Administrator';
     }
 
     /**
@@ -23,9 +25,10 @@ class TerenskiPodaciUpdateRequest extends FormRequest
             'datum_terena' => ['required', 'date'],
             'opis_terena' => ['required', 'string'],
             'merenja' => ['required', 'string'],
-            'fotografije' => ['required', 'string'],
+            'fotografije' => ['required', 'array'],
+            'fotografije.*' => ['file', 'mimes:jpg,jpeg,png,webp'],
             'analize' => ['required', 'string'],
-            'zahtev_id' => ['required', 'integer', 'exists:Zahtevs,id'],
+            'zahtev_id' => ['required', 'integer', 'exists:zahtevs,id'],
         ];
     }
 }

@@ -11,7 +11,10 @@ class TerenskiPodaciStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        $uloga = $user?->uloga?->naziv;
+
+        return in_array($uloga, ['Administrator', 'Sudski veštak'], true);
     }
 
     /**
@@ -23,9 +26,10 @@ class TerenskiPodaciStoreRequest extends FormRequest
             'datum_terena' => ['required', 'date'],
             'opis_terena' => ['required', 'string'],
             'merenja' => ['required', 'string'],
-            'fotografije' => ['required', 'string'],
+            'fotografije' => ['required', 'array'],
+            'fotografije.*' => ['file', 'mimes:jpg,jpeg,png,webp'],
             'analize' => ['required', 'string'],
-            'zahtev_id' => ['required', 'integer', 'exists:Zahtevs,id'],
+            'zahtev_id' => ['required', 'integer', 'exists:zahtevs,id'],
         ];
     }
 }
