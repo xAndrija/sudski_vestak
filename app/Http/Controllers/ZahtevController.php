@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ZahtevStoreRequest;
 use App\Http\Requests\ZahtevUpdateRequest;
+use App\Models\Klijent;
 use App\Models\Zahtev;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class ZahtevController extends Controller
@@ -15,14 +17,16 @@ class ZahtevController extends Controller
     {
         $zahtevs = Zahtev::all();
 
-        return view('zahtev.index', [
-            'zahtevs' => $zahtevs,
-        ]);
+        return view('zahtevi', compact('zahtevs'));
     }
 
     public function create(Request $request): View
     {
-        return view('zahtev.create');
+        abort_unless(Gate::allows('zahtev.create'), 403);
+
+        $klijents = Klijent::all();
+
+        return view('zahtev.create', compact('klijents'));
     }
 
     public function store(ZahtevStoreRequest $request): RedirectResponse
@@ -31,7 +35,7 @@ class ZahtevController extends Controller
 
         $request->session()->flash('zahtev.id', $zahtev->id);
 
-        return redirect()->route('zahtevs.index');
+        return redirect()->route('zahtevi');
     }
 
     public function show(Request $request, Zahtev $zahtev): View
@@ -43,24 +47,30 @@ class ZahtevController extends Controller
 
     public function edit(Request $request, Zahtev $zahtev): View
     {
-        return view('zahtev.edit', [
-            'zahtev' => $zahtev,
-        ]);
+        abort_unless(Gate::allows('zahtev.update'), 403);
+
+        $klijents = Klijent::all();
+
+        return view('zahtev.edit', compact('zahtev', 'klijents'));
     }
 
     public function update(ZahtevUpdateRequest $request, Zahtev $zahtev): RedirectResponse
     {
+        abort_unless(Gate::allows('zahtev.update'), 403);
+
         $zahtev->update($request->validated());
 
         $request->session()->flash('zahtev.id', $zahtev->id);
 
-        return redirect()->route('zahtevs.index');
+        return redirect()->route('zahtevi');
     }
 
     public function destroy(Request $request, Zahtev $zahtev): RedirectResponse
     {
+        abort_unless(Gate::allows('zahtev.delete'), 403);
+
         $zahtev->delete();
 
-        return redirect()->route('zahtevs.index');
+        return redirect()->route('zahtevi');
     }
 }

@@ -11,7 +11,10 @@ class ZahtevStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        $uloga = $user?->uloga?->naziv;
+
+        return in_array($uloga, ['Administrator'], true);
     }
 
     /**
@@ -25,9 +28,9 @@ class ZahtevStoreRequest extends FormRequest
             'tip_vestacenja' => ['required', 'string'],
             'lokacija' => ['required', 'string'],
             'hitnost' => ['required', 'string'],
-            'status' => ['required', 'string'],
+            'status' => ['required', 'string', 'in:u_obradi,zavrsen,odbijen'],
             'datum_podnosenja' => ['required', 'date'],
-            'klijent_id' => ['required', 'integer', 'exists:Klijents,id'],
+            'klijent_id' => ['required', 'integer', 'exists:klijents,id'],
         ];
     }
 }
