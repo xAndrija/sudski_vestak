@@ -1,0 +1,61 @@
+name: Laravel CI/CD
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Proveru koda
+        uses: actions/checkout@v4
+
+      - name: Podesavanje PHP okruženja
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, bcmath, pdo, pdo_mysql, json, curl, sqlite3
+          coverage: none
+
+      - name: Kes composer zavisnosti
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Instalacija Composer paketa
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Setup environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Configure SQLite database
+        run: |
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env
+
+      - name: Pokretanje PHP code style provere sa Pintom
+        run: ./vendor/bin/pint --test
+
+      - name: Pokretanje migracija
+        run: php artisan migrate --force
+
+      - name: Pokretanje Laravel testova
+        run: |
+          php artisan test \
+            tests/Feature/PredmetCreateUseCaseTest.php \
+            tests/Feature/TerenskiPodaciUseCaseTest.php \
+            tests/Unit/PredmetStatusLabelTest.php \
+            tests/Unit/PredmetDateCastsTest.php
+
+      - name: Uspesno završavanje posla
+        run: echo "✅ Laravel CI posao je uspešno završen!"
