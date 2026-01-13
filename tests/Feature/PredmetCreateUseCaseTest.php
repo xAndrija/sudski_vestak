@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Predmet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 

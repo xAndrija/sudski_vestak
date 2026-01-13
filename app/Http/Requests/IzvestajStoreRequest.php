@@ -13,7 +13,7 @@ class IzvestajStoreRequest extends FormRequest
     {
         $user = $this->user();
 
-        return ($user?->uloga?->naziv) === 'Administrator';
+        return $user?->uloga?->naziv === 'Administrator';
     }
 
     /**

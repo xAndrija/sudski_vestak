@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('admin', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('predmet.create', function ($user): bool {
@@ -41,11 +41,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('predmet.update', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('predmet.delete', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('zahtev.create', function ($user): bool {
@@ -55,23 +55,23 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('zahtev.update', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('zahtev.delete', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('izvestaj.create', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('izvestaj.update', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('izvestaj.delete', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('terenskiPodaci.create', function ($user): bool {
@@ -81,11 +81,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('terenskiPodaci.update', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
 
         Gate::define('terenskiPodaci.delete', function ($user): bool {
-            return ($user?->uloga?->naziv) === 'Administrator';
+            return $user?->uloga?->naziv === 'Administrator';
         });
     }
 }

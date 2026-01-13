@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PredmetController;
-use App\Http\Controllers\ZahtevController;
 use App\Http\Controllers\IzvestajController;
+use App\Http\Controllers\PredmetController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ZahtevController;
 use App\Models\Izvestaj;
 use App\Models\Predmet;
-use App\Models\Zahtev;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

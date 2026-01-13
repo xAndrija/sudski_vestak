@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Uloga;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +21,7 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         $uloge = Uloga::orderBy('id')->get();
+
         return view('auth.register', compact('uloge'));
     }
 
